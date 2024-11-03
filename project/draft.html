@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist Style</title>
+<style>
+    .checklist-container {
+        max-width: 600px;
+        margin: 20px auto;
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    .checklist-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .progress-bar {
+        height: 5px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .progress {
+        width: 66%;
+        height: 100%;
+        background-color: #00b894;
+    }
+
+    .checklist-box {
+        background-color: #f8f8f8;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .checklist-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .checklist-item:last-child {
+        border-bottom: none;
+    }
+
+    .checkbox {
+        margin-right: 10px;
+    }
+
+    .checklist-footer {
+        color: #555;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    .completed-section {
+        margin-top: 15px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #666;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .editable-text {
+        border: none;
+        background: none;
+        font-size: 16px;
+        color: #333;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .editable-text:focus {
+        border-bottom: 1px solid #333;
+    }
+</style>
+</head>
+<body>
+
+<div class="checklist-container">
+    <!-- Header -->
+    <div class="checklist-header">
+        <span>قوائم التحقق</span>
+        <span>2/3</span>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar">
+        <div class="progress"></div>
+    </div>
+
+    <!-- Checklist box -->
+    <div class="checklist-box" id="checklist1">
+        <div class="checklist-header">
+            قائمة التحقق (<span class="item-count">1</span>)
+        </div>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" onclick="completeTask(this, 'checklist1')">
+                <input type="text" class="editable-text" value="عنصر التحقق" onfocus="this.select()">
+            </div>
+        </div>
+        <div class="checklist-footer" onclick="addChecklistItem('checklist1')">+ إضافة عنصر تحقق جديد</div>
+    </div>
+
+    <!-- Completed section -->
+    <div class="completed-section">2 مكتملة</div>
+    <div class="checklist-box" id="checklist2">
+        <div class="checklist-header">
+            قائمة التحقق (<span class="item-count">0</span>)
+        </div>
+        <div class="checklist-items"></div>
+        <div class="checklist-footer" onclick="addChecklistItem('checklist2')">+ إضافة عنصر تحقق جديد</div>
+    </div>
+</div>
+
+<script>
+function addChecklistItem(checklistId) {
+    // الحصول على العنصر الذي يحتوي على العناصر الفرعية
+    const checklistBox = document.getElementById(checklistId);
+    const checklistItems = checklistBox.querySelector('.checklist-items');
+    const itemCountElement = checklistBox.querySelector('.item-count');
+
+    // إنشاء عنصر تحقق جديد مع مربع نص قابل للتحرير
+    const newItem = document.createElement("div");
+    newItem.className = "checklist-item";
+    newItem.innerHTML = `
+        <input type="checkbox" class="checkbox" onclick="completeTask(this, '${checklistId}')">
+        <input type="text" class="editable-text" value="عنصر تحقق جديد" onfocus="this.select()">
+    `;
+
+    // إضافة العنصر الجديد إلى القائمة
+    checklistItems.appendChild(newItem);
+
+    // تحديث عدد العناصر في العنوان
+    const itemCount = checklistItems.querySelectorAll('.checklist-item:not(.hidden)').length;
+    itemCountElement.textContent = itemCount;
+}
+
+function completeTask(checkbox, checklistId) {
+    const checklistBox = document.getElementById(checklistId);
+    const checklistItems = checklistBox.querySelector('.checklist-items');
+    const itemCountElement = checklistBox.querySelector('.item-count');
+
+    // إخفاء العنصر المحدد
+    const checklistItem = checkbox.parentElement;
+    checklistItem.classList.add('hidden');
+
+    // تحديث العدد في العنوان
+    const itemCount = checklistItems.querySelectorAll('.checklist-item:not(.hidden)').length;
+    itemCountElement.textContent = itemCount;
+}
+</script>
+
+</body>
+</html>
